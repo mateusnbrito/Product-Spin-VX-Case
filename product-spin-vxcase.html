@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br" style="width: 100%; height: 100%;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animação 360 VX Case - VXGamepad</title>
+  <link rel="canonical" href="https://www.vxcase.com.br/gamepad-para-celular-vxcase/p" />
+</head>
+
+<body style="margin: 0px;">
+  <style>
+    html {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background-color: #000000;
+    }
+
+    body {
+      margin: 0px;
+    }
+
+    #container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      overflow: hidden;
+    }
+
+    #img {
+      width: 100%;
+      max-width: 800px;
+    }
+
+    #input {
+      position: absolute;
+      margin: 0px;
+      width: 100%;
+      height: 100%;
+      max-width: 800px;
+      max-height: 800px;
+      transform: rotate(180deg);
+      cursor: pointer;
+      border: none;
+      outline: none;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      background-color: #ffffff00;
+    }
+
+    input[type='range']::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 50%;
+      height: 100vh;
+      border: 0px;
+      background-color: #ffffff00;
+    }
+
+    input[type=range]::-moz-range-thumb {
+      opacity: 0;
+    }
+  </style>
+  <main>
+    <div id="container">
+      <img id="loading" src="https://images.mundodoiphone.com/animacoes-360/loading.gif" alt="Loading..."
+        crossorigin="anonymous">
+      <img id="img" src="https://images.mundodoiphone.com/animacoes-360/vxgamepad/vxgamepad-1.jpg" alt=""
+        crossorigin="anonymous">
+      <input id="input" type="range" min="1" max="25" value="25">
+    </div>
+  </main>
+  <script>
+    let loading = document.querySelector("#loading");
+    let img = document.querySelector("#img");
+    let input = document.querySelector("#input");
+
+    let array = [];
+    let frames = 25;
+    let cont = 25;
+
+    let url = "https://images.mundodoiphone.com/animacoes-360/vxgamepad/vxgamepad-";
+    let format = ".jpg";
+
+    img.style.display = "none";
+
+    img.addEventListener("load", () => {
+      if (cont <= frames && cont >= 1) {
+        cont--;
+
+        makeCanvas();
+
+        if (cont <= frames) {
+          img.setAttribute("src", `${url}${cont}${format}`);
+        }
+
+        if (cont == 1) {
+          show();
+        }
+      }
+    });
+
+    function makeCanvas() {
+      let imgCanvas = document.createElement("canvas");
+      let imgContext = imgCanvas.getContext("2d");
+
+      imgCanvas.width = img.width;
+      imgCanvas.height = img.height;
+
+      imgContext.drawImage(img, 0, 0, img.width, img.height);
+
+      var imgAsDataURL = imgCanvas.toDataURL("image/png");
+
+      array.push(imgAsDataURL);
+    }
+
+    function show() {
+      img.style.display = "block";
+
+      loading.remove();
+
+      let aux = frames;
+
+      let timer = setInterval(() => {
+        if (aux > 0) {
+          img.setAttribute("src", `${array[aux - 1]}`);
+        }
+        else {
+          scroll();
+          clearInterval(timer);
+        }
+
+        aux--;
+      }, 50);
+    }
+
+    function scroll() {
+      input.addEventListener("input", () => {
+        img.setAttribute("src", `${array[(input.value) - 1]}`);
+      });
+    }
+  </script>
+</body>
+
+</html>
